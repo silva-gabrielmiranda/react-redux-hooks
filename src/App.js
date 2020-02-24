@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { createStore } from 'redux';
 import Header from './components/header/index';
-import namesApp from './namesApp';
-import { addName, changeData, changeTitle } from './actionTypes'
+import namesApp from './reducers/namesApp';
+import { addName, changeData, changeTitle } from './actions/actionTypes'
 
 const store = createStore(namesApp);
 
@@ -19,11 +19,11 @@ console.log("getState()",store.getState());
 unsubscribe();
 
 function App() {
-  const [name, setName] = useState('Gabriel');
+  const [state, setState] = useState(store.getState());
 
   return (
     <div className="App">
-      <h1>{name}</h1>
+      <h1>{JSON.stringify(state)}</h1>
       <Header></Header>
     </div>
   );
