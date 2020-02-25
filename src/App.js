@@ -1,32 +1,37 @@
 import React, { useState } from 'react';
-import { createStore } from 'redux';
 import Header from './components/header/index';
-import namesApp from './reducers/namesApp';
-import { addName, changeData, changeTitle } from './actions/actionTypes'
-
-const store = createStore(namesApp);
-
-console.log(store.getState());
-const unsubscribe = store.subscribe(() => console.log(store.getState()))
-store.dispatch(addName('Gabriel'));
-store.dispatch(addName('Lucas'));
-store.dispatch(changeData('23/02/2020'));
-store.dispatch(changeData('01/02/2020'));
-store.dispatch(changeTitle('Lista de Nomes'));
-store.dispatch(changeTitle('Lista de Nomes 2'));
-console.log("getState()",store.getState());
-
-unsubscribe();
+import { useDispatch, useSelector } from 'react-redux';
+import { changeTitle } from './actions/actionTypes'
 
 function App() {
-  const [state, setState] = useState(store.getState());
+    // Prepara o uso das action (caso seja necessário alterações)
+    const dispatch = useDispatch();
 
-  return (
-    <div className="App">
-      <h1>{JSON.stringify(state)}</h1>
-      <Header></Header>
-    </div>
-  );
+    // Inicia o State da aplicação (Neste caso apenas o titulo)
+    const [newTitle, useNewTitle] = useState("");
+
+    // Busca o title que está salvo no Store do redux
+    const { title } = useSelector(state => state.description);
+
+    // Função que faz o uso da action de alteração de titulo
+    function setTitle() {
+        dispatch(changeTitle(newTitle));
+        console.log("Titulo antigo: ", title);
+        console.log("Titulo novo: ", newTitle);
+    }
+
+    // Adiciona o valor do input dentro do State.
+    const HandleInput = (e) => useNewTitle(e.target.value)
+
+    return (
+        <div className="App">
+            <Header></Header>
+            <h1>{title}</h1>
+            <input type="text" onChange={HandleInput}></input>
+            <button onClick={setTitle}>Clique para testar</button>
+        </div>
+    );
+    
 }
 
 export default App;
